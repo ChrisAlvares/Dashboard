@@ -46,9 +46,17 @@
     {
 	    if(this.shouldSpawnCircle(frame))
 	    {
-		    alert("test");
+	    	this.addShape();
 	    }
 	    
+	    for(var index=0;index<this.shapes.length;index++)
+	    {
+		    if(!this.shapes[index].step())
+		    {
+			    this.shapes.splice(index, 1);
+			    index--;
+		    }
+	    }
     }
     
     Director.prototype.shouldSpawnCircle = function(frame)
@@ -57,24 +65,40 @@
 	    if(typeof this.lastFrameTime === 'undefined')
 	    {
 	    	this.lastFrameTime = frame.time;
-	    	this.addShape();
+	    	return true;
 	    }	
 	    if((frame.time - this.lastFrameTime) > this.options.spawn_rate)
 	    {
-	    	this.addShape();
 		    this.lastFrameTime = frame.time;
+		    return true;
 	    }
-	    for(var index in this.shapes)
-	    {
-		    this.shapes[index].step();
-	    }
+	    return false;
     }
     
     Director.prototype.addShape = function()
     {
+    	if(typeof this.uniqueId === 'undefined')
+    		this.uniqueId = 0;
+    	this.uniqueId++;
+    	
     	var circle = new Shapes.Circle();
     	circle.addToLayer(this.mainLayer);
+    	circle.id = this.uniqueId;
+    	circle.delegate = this;
+    	
 	    this.shapes.push(circle);
+    }
+    
+    Director.prototype.removeShape = function(shape)
+    {
+    	for(var index in shape.delegate.shapes)
+    	{
+    		if(shape.delegate.shapes[index].id == shape.id)
+    		{
+	    		shape.delegate.shapes = shape.delegate.shapes.splice(index, 1);
+	    		return;
+    		}
+    	}    	
     }
 	
 	

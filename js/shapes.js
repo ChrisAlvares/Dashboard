@@ -7,6 +7,7 @@ var Shapes = {};
 	{
 		this.shape = null;
 		this.direction = null;
+		this.delegate = null;
 	}
 	
 	sp.ManipulativeShape.TopToBottom = 1;
@@ -23,8 +24,8 @@ var Shapes = {};
 		this.shape.setX(pos.x);
 		this.shape.setY(pos.y);
 		
-		this.speed = this.getRandomSpeed();
-	
+		this.speedX = this.getRandomSpeed();
+		this.speedY = this.getRandomSpeed();
 		layer.add(this.shape);
 	}
 	
@@ -78,16 +79,42 @@ var Shapes = {};
 	sp.ManipulativeShape.prototype.step = function()
 	{
 		if(this.directionVertical == sp.ManipulativeShape.TopToBottom)
-			this.shape.setY(this.shape.getY()+this.speed);
+		{
+			this.shape.setY(this.shape.getY()+this.speedY);
+			if(this.shape.getY() > (this.shape.getLayer().getHeight() + this.shape.getHeight())) {
+				this.shape.destroy();
+				return false;
+			}
+		}
 		else
-			this.shape.setY(this.shape.getY()-this.speed);
+		{
+			this.shape.setY(this.shape.getY()-this.speedY);
+			
+			if(this.shape.getY() < 0)
+			{
+				this.shape.destroy();
+				return false;
+			}
+		}
 		
 		if(this.directionHorizontal == sp.ManipulativeShape.LeftToRight)
-			this.shape.setX(this.shape.getX()+this.speed);
+		{
+			this.shape.setX(this.shape.getX()+this.speedX);
+			
+			if(this.shape.getX() > (this.shape.getLayer().getWidth() + this.shape.getWidth())) {
+				this.shape.destroy();
+				return false;
+			}
+
+		}
 		else
-			this.shape.setX(this.shape.getX()-this.speed);
-		
-
-	}
-
+		{
+			this.shape.setX(this.shape.getX()-this.speedX);
+			if(this.shape.getX() < 0) {
+				this.shape.destroy();
+				return false;
+			}	
+		}
+		return true;
+	}	
 })(jQuery, Shapes);
