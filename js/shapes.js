@@ -26,9 +26,19 @@ var Shapes = {};
 		
 		this.speedX = this.getRandomSpeed();
 		this.speedY = this.getRandomSpeed();
+				
 		layer.add(this.shape);
 	}
 	
+	sp.ManipulativeShape.prototype.on = function(event_str, callback)
+	{
+		var that = this;
+		this.shape.on(event_str, function()
+		{
+			callback(that);
+		});
+	}
+		
 	sp.ManipulativeShape.prototype.getRandomColor = function()
 	{
         return '#'+(0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);

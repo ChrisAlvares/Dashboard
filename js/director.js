@@ -4,6 +4,7 @@
 
 		$.extend(this.options, opts);
 		
+		
 		var $c = $(this.options.container);
 		
 		this.stage = new Kinetic.Stage({
@@ -84,23 +85,14 @@
     	var circle = new Shapes.Circle();
     	circle.addToLayer(this.mainLayer);
     	circle.id = this.uniqueId;
-    	circle.delegate = this;
+    	circle.on('mouseover', function(shape)
+    	{
+	    	window.hue.setColor(3, shape.getColor().replace(/#/, ''));
+
+    	});
     	
 	    this.shapes.push(circle);
-    }
-    
-    Director.prototype.removeShape = function(shape)
-    {
-    	for(var index in shape.delegate.shapes)
-    	{
-    		if(shape.delegate.shapes[index].id == shape.id)
-    		{
-	    		shape.delegate.shapes = shape.delegate.shapes.splice(index, 1);
-	    		return;
-    		}
-    	}    	
-    }
-	
+    }	
 	
 	
 	/*

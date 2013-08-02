@@ -12,8 +12,14 @@
         	opacity:this.getRandomOpacity()
         });
         
-	}
+	}	
 	
 	Shapes.Circle.prototype = new Shapes.ManipulativeShape();
+	
+	Shapes.Circle.prototype.getColor = function()
+	{
+		return this.shape.getFill();
+	}
+
 	
 })(jQuery, window);
